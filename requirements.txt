@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-telegram-bot[json] == 20.0a0
+httpx==0.23.0
+requests
+pytest
+pytest-asyncio
+pytz==2021.3
+pytz-deprecation-shim==0.1.0.post0
