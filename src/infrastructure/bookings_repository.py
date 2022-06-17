@@ -6,7 +6,7 @@ import re
 import os
 
 from src.entities.booking import Booking
-from src.infrastructure.user_access_repository import UserAccessRepository
+from src.infrastructure.user_repository import UserRepository
 from src.infrastructure.schedule_bookings_repository import BookingsSchedulerRepository
 
 
@@ -102,7 +102,7 @@ _client = AsyncClient()
 class BookingsRepository:
     def __init__(
         self,
-        user_access_repository: UserAccessRepository,
+        user_access_repository: UserRepository,
         scheduled_booking_repository: BookingsSchedulerRepository,
     ):
         self.user_access_repository = user_access_repository
@@ -184,6 +184,9 @@ class BookingsRepository:
         # Get session cookies
         cookies = await self.user_access_repository.get_cookies(mail)
 
+        if not cookies:
+            raise Exception("Not Logged In")
+
         # Book class
         response = await _client.post(
             "https://alphalinkcrossfit.aimharder.com/api/book",
@@ -237,15 +240,18 @@ class BookingsRepository:
         # TODO: Manage errors
         raise Exception("Could not make booking")
 
-    async def cancel_booking(self, booking: Booking, mail: str) -> Booking:
+    async def cancel_booking(self, booking: Booking, mail: str, late: int = 0) -> Booking:
 
         # Get session cookies
         cookies = await self.user_access_repository.get_cookies(mail)
 
+        if not cookies:
+            raise Exception("Not Logged In")
+
         # Cancel booking
         response = await _client.post(
             "https://alphalinkcrossfit.aimharder.com/api/cancelBook",
-            data={"id": booking.cancel_id, "late": 0, "familiId": ""},
+            data={"id": booking.cancel_id, "late": late, "familiId": ""},
             cookies=cookies,
             follow_redirects=True,
         )
@@ -253,7 +259,17 @@ class BookingsRepository:
         # Check if canceled
         if (response.status_code == 200) and ("cancelState" in response.json()):
             booking.status = "NONE"
-            return booking
+
+            state = response.json()["cancelState"]
+
+            if state == 1:
+                booking.status = "NONE"
+                return booking
+            elif state == 2:
+                # TODO: Update cancel id and booking status
+                return await self.cancel_booking(booking, mail, late=1)
+            elif state == 3:
+                raise CanNotCancelBookingException("")
 
         # TODO: Custom error
         raise CanNotCancelBookingException("Could not cancel booking")

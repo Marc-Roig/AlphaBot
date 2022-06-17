@@ -1,7 +1,7 @@
 fastapi
 uvicorn[standard]
 python-telegram-bot[json] == 20.0a0
-httpx==0.23.0
+httpx~=0.22.0
 requests
 pytest
 pytest-asyncio

@@ -13,7 +13,7 @@ class Booking(BaseModel):
     class_name: Optional[str]
     occupation: int
     limit: int
-    wait_list_occupation: int = Field(..., le=5)
+    wait_list_occupation: int
     start_timestamp: datetime.datetime
     end_timestamp: datetime.datetime 
 
@@ -26,7 +26,7 @@ class Booking(BaseModel):
     def has_started(self) -> bool:
         return datetime.datetime.now() > self.start_timestamp
     
-    def is_inrange_to_book(self) -> bool:
+    def is_in_range_to_book(self) -> bool:
         return not self.has_started() and \
                   (self.start_timestamp - datetime.datetime.now()).days < 4
     
@@ -35,7 +35,7 @@ class Booking(BaseModel):
 
     def is_bookable(self) -> bool:        
         return not self.has_started() and \
-                   self.is_inrange_to_book() and \
+                   self.is_in_range_to_book() and \
                not self.is_full() and \
                not self.is_booked()
     
@@ -43,20 +43,3 @@ class Booking(BaseModel):
         # 4 days before class
         return self.start_timestamp - datetime.timedelta(days=4)
 
-# import datetime
-# from pydantic import BaseModel, Extra
-
-# from src.shared.utils.date_transformations import int_to_datetime
-
-# class ScheduledBooking(BaseModel, extra=Extra.ignore):
-#     booking_id: str
-#     mail: str
-#     class_name: str
-#     start_timestamp: int
-#     bookable_timestamp: int
-#     retries: int = 0
-    
-#     @property
-#     def start_date(self) -> datetime.datetime:
-#         date: datetime.datetime = int_to_datetime(self.start_timestamp)
-#         return date

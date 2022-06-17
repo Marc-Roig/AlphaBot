@@ -1,11 +1,11 @@
 from src.infrastructure.bookings_repository import BookingsRepository
-from src.infrastructure.user_access_repository import UserAccessRepository
+from src.infrastructure.user_repository import UserRepository
 from src.infrastructure.schedule_bookings_repository import BookingsSchedulerRepository
 from datetime import datetime
 import pytest
 
 
-user_access_repository = UserAccessRepository()
+user_access_repository = UserRepository()
 bookings_scheduler_repository = BookingsSchedulerRepository()
 bookings_repository = BookingsRepository(
     user_access_repository=user_access_repository,

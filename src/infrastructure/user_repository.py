@@ -1,8 +1,8 @@
 from http.cookiejar import Cookie as HttpCookie, CookieJar
 from pydantic.main import BaseModel
-from typing import Dict, Optional
+from typing import Optional
 from httpx import AsyncClient
-import requests
+import requests # type: ignore
 import datetime
 
 _client = AsyncClient()
@@ -19,18 +19,19 @@ class Cookie(BaseModel):
     domain: Optional[str] = None
 
 
-class UserAccessRepository:
+class UserRepository:
 
-    user_cookies: Dict[str, str] = {
-        "marc12info@gmail.com": "231784%7C1662297339%7C6382a5b012afdf595dec0bbd49f6e13a"
+    user_cookies: dict[str, str] = {
+        "marc12info@gmail.com": "231784%7C1662297339%7C6382a5b012afdf595dec0bbd49f6e13a",
+        "glezgutierrez95@gmail.com": "121104%7C1662979653%7C75ad1e2b789c4ced9460f3e214516cf7"
     }
 
-    async def login(self, mail: str, pw: str) -> Dict[str, Cookie]:
+    async def login(self, mail: str, pw: str) -> dict[str, Cookie]:
 
         # TODO: Make this async
         # Login to alphalink
         session = requests.Session()
-        response = session.post(
+        _ = session.post(
             "https://alphalinkcrossfit.aimharder.com/login",
             data={"login": "Log in", "mail": mail, "pw": pw},
         )
@@ -68,7 +69,7 @@ class UserAccessRepository:
 
     async def set_auth_cookie(self, mail: str, amhrdauth: str) -> None:
 
-        if not self.is_cookie_valid(amhrdauth=amhrdauth):
+        if not await self.is_cookie_valid(amhrdauth=amhrdauth):
             raise Exception("Invalid login credentials")
 
         self.user_cookies[mail] = amhrdauth

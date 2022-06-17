@@ -1,7 +1,7 @@
 import datetime
 from src.entities.booking import Booking
 from src.infrastructure import bookings_repository, bookings_scheduler_repository
-
+from src.infrastructure.bookings_repository import ExceededBookingLimitException, CanNotBookAtTheSameTimeException, NotAllowedForThisClassException, ExceededDailyBookingLimitException 
 
 class BookingDoesNotExistException(Exception):
     """
@@ -29,17 +29,37 @@ async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> B
         raise BookingDoesNotExistException(
             f"Booking {booking_id} on date {date} does not exist"
         )
+        
+    # TODO: Manage retries
+    was_booking_scheduled = booking.is_scheduled()
 
     # If it is already booked
     if booking.is_booked():
         raise AlreadyBookedException()
-
+    
     # Check if its in range to book
     elif booking.is_bookable():
-        booking = await bookings_repository.book(booking=booking, mail=mail)
+
+        try:
+            booking = await bookings_repository.book(booking=booking, mail=mail)
+        # If user is not allowed to book for that time, continue and discard this booking
+        except (ExceededDailyBookingLimitException,
+                NotAllowedForThisClassException, 
+                ExceededBookingLimitException, 
+                CanNotBookAtTheSameTimeException):
+            print(f'Discarding booking {booking_id} at {date}')
+            pass
+
+        if was_booking_scheduled:
+            await bookings_scheduler_repository.remove_user_scheduled_booking(booking=booking, mail=mail)
 
     # Class can be booked but is full
-    elif booking.is_in_range_to_book() and booking.is_full():
+    elif booking.is_in_range_to_book() and booking.is_full() and not was_booking_scheduled:
+        
+        # Remove first the scheduled class if it was
+        if was_booking_scheduled:
+            await bookings_scheduler_repository.remove_user_scheduled_booking(booking=booking, mail=mail)
+
         booking = await bookings_scheduler_repository.schedule_booking(
             booking=booking,
             booking_date=datetime.datetime.now() + datetime.timedelta(seconds=60 * 2),
@@ -47,11 +67,10 @@ async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> B
         )
 
     # Schedule booking
-    elif booking.status == "NONE":
+    elif (booking.status == "NONE") and (not was_booking_scheduled):
         booking = await bookings_scheduler_repository.schedule_booking(
             booking=booking,
-            booking_date=booking.get_next_bookable_date()
-            + datetime.timedelta(seconds=1),
+            booking_date=booking.get_next_bookable_date(),
             mail=mail,
         )
 

@@ -1,11 +1,11 @@
-from src.infrastructure.user_access_repository import (
+from src.infrastructure.user_repository import (
     CredentialsError,
-    UserAccessRepository,
+    UserRepository,
 )
 import pytest
 import os
 
-user_access_repository = UserAccessRepository()
+user_access_repository = UserRepository()
 
 
 class TestUserAccessRepository:

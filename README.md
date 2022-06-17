@@ -1,46 +1,16 @@
-Telegram automated bot to :
-- List available clases for a day.
-- Book a class in range.
-- Book a class that is full.
-- Book a class that is not in range.
+# TODO
 
+- Tidy commands
+    - Create callback query handler folder
+    - Create mess handler folder
+    - Create command handler folder
 
-
-- Use python
-- Hardcode the cookie token 
-
-
-# Presentation:
-
-## Telegram bot
-
-- List my bookings (with user Id)
-- Make booking ( with user Id and booking ID)
-
-## Endpoints
-
-## Cron
-
-- Every minute check if there are any bookings to make per user
-- Make booking if the penidng bookings have dates greater than current.
-
-
-
-# Infrastructure:
-
-enum Classes {
-
-}
-
-Booking
-    getBooking(date: Date, name: string)
-    book(booking: Booking) -> Booking
-        - Makes a request to book.
-        - If it does not work throw error.
-        - Changes status of booking
-    scheduleBooking(booking: Booking)
-        - Stores in a dictionary
-    cancelBooking
-User
-    getCookie(userName)
-
+- Create public command to ask for an invite
+- Create user command to list your bookings
+- Create user command to ask for booking validation
+- Test app for a week
+- Move to redis / mongo / postgres
+- Add cancel button on class list
+- Message user ok booking scheduled booking
+- Retries for booking
+- [TO TEST] If you do not have more bookings available discard booking
