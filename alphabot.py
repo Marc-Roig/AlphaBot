@@ -1,11 +1,7 @@
 from telegram.ext import Application, CallbackContext
 from src.commands import add_user_commands, add_repeating_jobs
 from src.infrastructure import start_beanie
-
-from pathlib import Path
-from logging import handlers
 import logging
-import re
 import os
 
 logger = logging.getLogger(__name__)
@@ -15,32 +11,23 @@ async def startup(context: CallbackContext) -> None:
     logger.info("Starting up database...")
     await start_beanie()
     logger.info("Database initialized")
-    service_initialized = True
 
 def init_logger():
+
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
+    
     console_logger = logging.StreamHandler()
     console_logger.setLevel(logging.INFO)
+    
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     console_logger.setFormatter(formatter)
+    
     root_logger.addHandler(console_logger)
 
-    # this_file_name = os.path.basename(os.path.splitext(os.path.basename(__file__))[0])
-
-    # Path('./logs/').mkdir(parents=True, exist_ok=True)
-    # logfile = './logs/' + this_file_name
-
-    # file_logger = handlers.TimedRotatingFileHandler(logfile, encoding='utf-8', when='midnight')
-    # file_logger.suffix = "%Y-%m-%d.log"
-    # file_logger.extMatch = re.compile(r'^\d{4}-\d{2}-\d{2}\.log$')
-    # file_logger.setLevel(logging.DEBUG)
-    # file_logger.setFormatter(formatter)
-    # root_logger.addHandler(file_logger)
-
-    # logging.getLogger('telegram.bot').setLevel(logging.INFO)
-    # logging.getLogger('telegram.ext.updater').setLevel(logging.INFO)
-    logging.getLogger('JobQueue').setLevel(logging.INFO)
+    logging.getLogger('telegram.bot').setLevel(logging.ERROR)
+    logging.getLogger('telegram.ext.updater').setLevel(logging.ERROR)
+    logging.getLogger('JobQueue').setLevel(logging.ERROR)
 
 
 def main() -> None:
@@ -59,8 +46,6 @@ def main() -> None:
 
     # Run the bot
     telegram_app.run_polling()
-
-logger.info('Initializing...')
 
 if __name__ == "__main__":
     main()
