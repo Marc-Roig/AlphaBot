@@ -6,7 +6,7 @@ Alphabot is a telegram bot that allows you to book Crossfit classes before the b
 
 ## 🚀 Deploy
 
-[![Deploy on Railway](https://railway.app/button.svg)]()
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/1lUfdC?referralCode=77g3LA)
 
 Fill the following env vars as per below instructions: 
 

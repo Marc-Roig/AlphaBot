@@ -1,23 +1,20 @@
 from telegram.ext import Application, CallbackContext
 from src.commands import add_user_commands, add_repeating_jobs
-
 from src.infrastructure import start_beanie
-import time
-import logging
+
 from pathlib import Path
 from logging import handlers
+import logging
 import re
-import sys
 import os
+
 logger = logging.getLogger(__name__)
 
 
-TOKEN = "5449340591:AAGQ05hp2NliXxz9zowlWVLUg-vZ-LsGeIM"
-
 async def startup(context: CallbackContext) -> None:
-    print("Starting up database...")
+    logger.info("Starting up database...")
     await start_beanie()
-    print("Database initialized")
+    logger.info("Database initialized")
     service_initialized = True
 
 def init_logger():
@@ -29,30 +26,29 @@ def init_logger():
     console_logger.setFormatter(formatter)
     root_logger.addHandler(console_logger)
 
-    this_file_name = os.path.basename(os.path.splitext(os.path.basename(__file__))[0])
+    # this_file_name = os.path.basename(os.path.splitext(os.path.basename(__file__))[0])
 
-    Path('./logs/').mkdir(parents=True, exist_ok=True)
-    logfile = './logs/' + this_file_name
+    # Path('./logs/').mkdir(parents=True, exist_ok=True)
+    # logfile = './logs/' + this_file_name
 
-    file_logger = handlers.TimedRotatingFileHandler(logfile, encoding='utf-8', when='midnight')
-    file_logger.suffix = "%Y-%m-%d.log"
-    file_logger.extMatch = re.compile(r'^\d{4}-\d{2}-\d{2}\.log$')
-    file_logger.setLevel(logging.DEBUG)
-    file_logger.setFormatter(formatter)
-    root_logger.addHandler(file_logger)
+    # file_logger = handlers.TimedRotatingFileHandler(logfile, encoding='utf-8', when='midnight')
+    # file_logger.suffix = "%Y-%m-%d.log"
+    # file_logger.extMatch = re.compile(r'^\d{4}-\d{2}-\d{2}\.log$')
+    # file_logger.setLevel(logging.DEBUG)
+    # file_logger.setFormatter(formatter)
+    # root_logger.addHandler(file_logger)
 
-    logging.getLogger('telegram.bot').setLevel(logging.INFO)
-    logging.getLogger('telegram.ext.updater').setLevel(logging.INFO)
+    # logging.getLogger('telegram.bot').setLevel(logging.INFO)
+    # logging.getLogger('telegram.ext.updater').setLevel(logging.INFO)
     logging.getLogger('JobQueue').setLevel(logging.INFO)
 
-    return logfile
 
 def main() -> None:
 
     init_logger()
 
     # Initialize the bot
-    telegram_app = Application.builder().token(TOKEN).build()
+    telegram_app = Application.builder().token(os.environ['TOKEN']).build()
     
     job_queue = telegram_app.job_queue
     job_queue.run_once(startup, 0)
@@ -64,7 +60,7 @@ def main() -> None:
     # Run the bot
     telegram_app.run_polling()
 
-print('Initializing...')
+logger.info('Initializing...')
 
 if __name__ == "__main__":
     main()
