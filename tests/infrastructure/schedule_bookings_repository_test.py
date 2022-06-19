@@ -1,10 +1,14 @@
-from src.infrastructure.schedule_bookings_repository import (
+from src.infrastructure import start_beanie
+from src.infrastructure.schedule_bookings_mongo_repository import (
     BookingAlreadyScheduledException,
-    BookingsSchedulerRepository,
+    BookingsSchedulerMongoRepository,
+    ScheduledBookings
 )
 from src.entities.booking import Booking
 from datetime import datetime
 import pytest
+import asyncio
+import os
 
 
 booking = Booking(
@@ -20,22 +24,33 @@ booking = Booking(
     end_timestamp=datetime(2020, 1, 1, 11, 0),
 )
 
+bookings_scheduler_repository = BookingsSchedulerMongoRepository()
+
+@pytest.fixture(scope="session")
+def event_loop():
+    return asyncio.get_event_loop()
+
+@pytest.fixture(scope="module")
+async def client():
+    os.environ['MONGO_DB'] = 'test'
+    await start_beanie()
 
 @pytest.fixture
-def bookings_scheduler_repository():
-    return BookingsSchedulerRepository()
+async def clean_db(client):
+    yield
+    await ScheduledBookings.find_all().delete()
 
 
-@pytest.mark.asyncio
-async def test_is_booking_scheduled_wrong_booking(bookings_scheduler_repository):
+async def test_is_booking_scheduled_wrong_booking(
+    client: None
+) -> None:
     assert not await bookings_scheduler_repository.is_booking_scheduled(
-        booking, "mail@test.com"
+        booking, "mail@gmail.com"
     )
 
 
-@pytest.mark.asyncio
 async def test_schedule_booking(
-    bookings_scheduler_repository: BookingsSchedulerRepository,
+    client: None, clean_db: None,
 ) -> None:
 
     await bookings_scheduler_repository.schedule_booking(
@@ -50,9 +65,8 @@ async def test_schedule_booking(
     assert is_scheduled
 
 
-@pytest.mark.asyncio
 async def test_schedule_booking_twice(
-    bookings_scheduler_repository: BookingsSchedulerRepository,
+    client: None, clean_db: None,
 ) -> None:
 
     await bookings_scheduler_repository.schedule_booking(
@@ -65,9 +79,8 @@ async def test_schedule_booking_twice(
         )
 
 
-@pytest.mark.asyncio
 async def test_get_user_scheduled_bookings(
-    bookings_scheduler_repository: BookingsSchedulerRepository,
+    client: None, clean_db: None,
 ) -> None:
 
     await bookings_scheduler_repository.schedule_booking(
@@ -84,9 +97,8 @@ async def test_get_user_scheduled_bookings(
 
     assert len(bookings) == 1
 
-@pytest.mark.asyncio
 async def test_get_user_scheduled_bookings_from_date(
-    bookings_scheduler_repository: BookingsSchedulerRepository,
+    client: None, clean_db: None,
 ) -> None:
 
     await bookings_scheduler_repository.schedule_booking(
@@ -106,10 +118,8 @@ async def test_get_user_scheduled_bookings_from_date(
     assert len(bookings) == 0
 
 
-
-@pytest.mark.asyncio
 async def test_remove_booking_from_schedule(
-    bookings_scheduler_repository: BookingsSchedulerRepository,
+    client: None, clean_db: None,
 ) -> None:
 
     await bookings_scheduler_repository.schedule_booking(

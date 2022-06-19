@@ -1,30 +1,22 @@
 from http.cookiejar import Cookie as HttpCookie, CookieJar
-from pydantic.main import BaseModel
 from typing import Optional
 from httpx import AsyncClient
 import requests # type: ignore
 import datetime
+from beanie import Document
+
+from src.output_ports.user_port import Cookie, CredentialsError, UserPort
 
 _client = AsyncClient()
 
 
-class CredentialsError(Exception):
-    pass
+class Users(Document):
+    email: str
+    token: str
 
 
-class Cookie(BaseModel):
-    value: str = ""
-    expires: Optional[int] = None
-    path: str = "/"
-    domain: Optional[str] = None
+class UserMongoRepository(UserPort):
 
-
-class UserRepository:
-
-    user_cookies: dict[str, str] = {
-        "marc12info@gmail.com": "231784%7C1662297339%7C6382a5b012afdf595dec0bbd49f6e13a",
-        "glezgutierrez95@gmail.com": "121104%7C1662979653%7C75ad1e2b789c4ced9460f3e214516cf7"
-    }
 
     async def login(self, mail: str, pw: str) -> dict[str, Cookie]:
 
@@ -41,7 +33,14 @@ class UserRepository:
             raise CredentialsError("Login Error")
 
         # Store cookie
-        self.user_cookies[mail] = session.cookies.get("amhrdrauth")
+        user = Users(
+            email=mail,
+            token=session.cookies.get("amhrdrauth")
+        )
+
+        await Users \
+            .find_one(Users.email == user.email) \
+            .upsert({"$set": {"token": user.token}}, on_insert=user)
 
         # Return cookie domain object
         return {
@@ -72,7 +71,14 @@ class UserRepository:
         if not await self.is_cookie_valid(amhrdauth=amhrdauth):
             raise Exception("Invalid login credentials")
 
-        self.user_cookies[mail] = amhrdauth
+        user = Users(
+            email=mail,
+            token=amhrdauth
+        )
+
+        await Users \
+            .find_one(Users.email == user.email) \
+            .upsert({"$set": {"token": user.token}}, on_insert=user)
 
     def amhrdrauth_string_to_cookie(self, amhrdauth: str) -> CookieJar:
         cj = CookieJar()
@@ -102,12 +108,12 @@ class UserRepository:
 
     async def get_cookies(self, mail: str) -> Optional[CookieJar]:
 
-        auth_cookie = self.user_cookies.get(mail)
+        user = await Users.find_one(Users.email == mail)
 
-        if auth_cookie:
-            return self.amhrdrauth_string_to_cookie(auth_cookie)
+        if user:
+            return self.amhrdrauth_string_to_cookie(user.token)
 
         return None
 
     async def clean_cookies(self) -> None:
-        self.user_cookies = {}
+        pass

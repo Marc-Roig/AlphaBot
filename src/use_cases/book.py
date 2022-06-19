@@ -19,6 +19,14 @@ class AlreadyBookedException(Exception):
     pass
 
 
+class ClassAlreadyStartedException(Exception):
+    """
+    Raised when trying to book an already booked class
+    """
+
+    pass
+
+
 async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> Booking:
 
     # Find booking
@@ -32,6 +40,9 @@ async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> B
         
     # TODO: Manage retries
     was_booking_scheduled = booking.is_scheduled()
+
+    if booking.has_started():
+        raise ClassAlreadyStartedException()
 
     # If it is already booked
     if booking.is_booked():

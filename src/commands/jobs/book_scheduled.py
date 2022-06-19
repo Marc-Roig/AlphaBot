@@ -5,7 +5,6 @@ from telegram.ext import CallbackContext
 from src.use_cases.book_user_scheduled_classes import make_bookings
 import asyncio
 
-import datetime
 async def handler(context: CallbackContext) -> None:
     
     users = ["marc12info@gmail.com"]

@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import ConversationHandler
-from src.infrastructure.user_repository import CredentialsError
+from src.output_ports.user_port import CredentialsError
 
 from src.utils import decorators
 from src.utils.telegram_context import AlphaContext

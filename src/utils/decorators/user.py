@@ -1,5 +1,4 @@
 from functools import wraps
-from src.utils.functions import get_user_id_list
 from src.infrastructure import telegram_user_repository
 
 
