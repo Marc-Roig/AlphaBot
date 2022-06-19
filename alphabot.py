@@ -27,6 +27,8 @@ def init_logger():
 
     logging.getLogger('telegram.bot').setLevel(logging.ERROR)
     logging.getLogger('telegram.ext.updater').setLevel(logging.ERROR)
+    logging.getLogger('apscheduler.scheduler').setLevel(logging.ERROR)
+    logging.getLogger('apscheduler.executors.default').setLevel(logging.ERROR)
     logging.getLogger('JobQueue').setLevel(logging.ERROR)
 
 
