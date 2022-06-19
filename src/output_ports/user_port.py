@@ -29,3 +29,6 @@ class UserPort(Protocol):
 
     async def clean_cookies(self) -> None:
         pass
+
+    async def get_all(self) -> list[str]:
+        pass

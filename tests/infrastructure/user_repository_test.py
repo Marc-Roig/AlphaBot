@@ -14,8 +14,6 @@ async def client():
     await start_beanie()
     yield
 
-    # await Users.delete_all()
-
 
 
 user_access_repository = UserMongoRepository()
@@ -29,3 +27,8 @@ async def test_login_valid(client: None) -> None:
 async def test_login_invalid(client: None) -> None:
     with pytest.raises(CredentialsError):
         await user_access_repository.login("marc12info@gmail.com", "1234")
+
+async def test_get_all_users(client: None) -> None:
+
+    users = await user_access_repository.get_all()
+    assert len(users)

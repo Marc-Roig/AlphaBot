@@ -117,3 +117,6 @@ class UserMongoRepository(UserPort):
 
     async def clean_cookies(self) -> None:
         pass
+
+    async def get_all(self) -> list[str]:
+        return [user.email async for user in Users.find()]
