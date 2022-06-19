@@ -7,6 +7,7 @@ import time
 TOKEN = "5449340591:AAGQ05hp2NliXxz9zowlWVLUg-vZ-LsGeIM"
 
 async def startup(context: CallbackContext) -> None:
+    print("Starting up database...")
     await start_beanie()
     print("Database initialized")
     service_initialized = True
@@ -27,6 +28,7 @@ def main() -> None:
     # Run the bot
     telegram_app.run_polling()
 
+print('Initializing...')
 
 if __name__ == "__main__":
     main()

@@ -32,3 +32,4 @@ Fill the following env vars as per below instructions:
 - Message user ok booking scheduled booking
 - Retries for booking
 - [TO TEST] If you do not have more bookings available discard booking
+- Add logger (loguru)
