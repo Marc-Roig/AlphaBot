@@ -1,0 +1,21 @@
+{
+    "name": "AlphaBot",
+    "description": "Automated bot to schedule crossfit bookings",
+    "keywords": [],
+    "env": {
+        "BOX_ID": {
+            "description": "Box id number",
+            "value": "9287"
+        },
+        "MONGO_CONNECTION": {
+            "description": "Mongo connection string"
+        },
+        "MONGO_DB": {
+            "description": "Mongo database name",
+            "value": "development"
+        }
+    },
+    "stack": "container",
+    "website": "https://t.me/alpha_link_bot",
+    "repository": "https://github.com/Marc-Roig/AlphaBot"
+}

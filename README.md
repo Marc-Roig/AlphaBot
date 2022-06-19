@@ -1,3 +1,22 @@
+# ⚛️ AlphaBot - Railway version
+
+Alphabot is a telegram bot that allows you to book Crossfit classes before the bookable time allowed in the official app.
+
+![](./assets/alphabot.png)
+
+## 🚀 Deploy
+
+[![Deploy on Railway](https://railway.app/button.svg)]()
+
+Fill the following env vars as per below instructions: 
+
+> BOX_ID = 9287  ⚠ Don't touch this
+>
+> MONGO_CONNECTION = ... 
+> 
+> MONGO_DB = ...
+> 
+
 # TODO
 
 - Tidy commands
