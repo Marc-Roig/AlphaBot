@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from pydantic import Field
 from src.entities.booking import Booking
 from src.output_ports.schedule_bookings_port import BookingAlreadyScheduledException, BookingsSchedulerPort, ScheduledBooking
 from beanie import Document
@@ -8,12 +10,18 @@ class ScheduledBookings(Document):
     booking: Booking
     mail: str
     retries: int = 0
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
+
 
 def db_to_domain(scheduled_booking_db: ScheduledBookings) -> ScheduledBooking:
     return ScheduledBooking(
         date=scheduled_booking_db.date,
         booking=scheduled_booking_db.booking,
         mail=scheduled_booking_db.mail,
+        retries=scheduled_booking_db.retries,
+        created_at=scheduled_booking_db.created_at,
+        updated_at=scheduled_booking_db.updated_at
     )
 
 def domain_to_db(scheduled_booking: ScheduledBooking) -> ScheduledBookings:
@@ -21,6 +29,8 @@ def domain_to_db(scheduled_booking: ScheduledBooking) -> ScheduledBookings:
         date=scheduled_booking.date,
         booking=scheduled_booking.booking,
         mail=scheduled_booking.mail,
+        retries=scheduled_booking.retries,
+        created_at=scheduled_booking.created_at
     )
 
 

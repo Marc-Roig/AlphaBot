@@ -41,5 +41,5 @@ class Booking(BaseModel):
     
     def get_next_bookable_date(self) -> datetime.datetime:
         # 4 days before class
-        return self.start_timestamp - datetime.timedelta(days=4)
+        return (self.start_timestamp - datetime.timedelta(days=4)).replace(second=0, microsecond=0)
 

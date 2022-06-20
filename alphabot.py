@@ -37,7 +37,8 @@ def main() -> None:
     init_logger()
 
     # Initialize the bot
-    telegram_app = Application.builder().token(os.environ['TOKEN']).build()
+    # About concurrency: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Concurrency
+    telegram_app = Application.builder().token(os.environ['TOKEN']).concurrent_updates(True).build()
     
     job_queue = telegram_app.job_queue
     job_queue.run_once(startup, 0)

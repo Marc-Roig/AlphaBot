@@ -1,6 +1,8 @@
 from beanie import Document, Indexed
 from pymongo import errors
 from typing import Literal, Optional
+from datetime import datetime
+from pydantic import Field
 
 from src.output_ports.telegram_user_port import TelegramUser, TelegramUserPort, UserAlreadyExistsException
 
@@ -9,7 +11,8 @@ class TelegramUsers(Document):
     email: str
     username: str
     role: Literal["ADMIN", "USER"] = "USER"
-
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
 
 def db_to_domain(telegram_user_db: TelegramUsers) -> TelegramUser:
     return TelegramUser(

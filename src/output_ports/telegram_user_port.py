@@ -1,6 +1,6 @@
 from typing import Optional, Protocol, Literal
-from http.cookiejar import Cookie as HttpCookie, CookieJar
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from datetime import datetime
 
 class UserAlreadyExistsException(Exception):
     pass
@@ -10,7 +10,8 @@ class TelegramUser(BaseModel):
     email: str
     username: str
     role: Literal["ADMIN", "USER"] = "USER"
-
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
 
 class TelegramUserPort(Protocol):
 

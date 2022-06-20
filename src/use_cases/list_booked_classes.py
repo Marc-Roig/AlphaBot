@@ -1,4 +1,3 @@
-import datetime
 from src.entities.booking import Booking
 from src.infrastructure import bookings_repository, bookings_scheduler_repository
 
