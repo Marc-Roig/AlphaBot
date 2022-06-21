@@ -29,8 +29,9 @@ async def _make_booking(booking_id: int, start_timestamp: datetime.datetime, mai
     except Exception as e:
         print(e)
 
+    return None
 
-async def make_bookings(mail: str) -> list[Awaitable]:
+async def make_bookings(mail: str) -> list[Awaitable[Booking]]:
 
     bookings = await bookings_scheduler_repository.get_user_scheduled_bookings_from_date(
         mail=mail,

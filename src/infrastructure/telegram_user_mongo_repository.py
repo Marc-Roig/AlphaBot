@@ -20,6 +20,8 @@ def db_to_domain(telegram_user_db: TelegramUsers) -> TelegramUser:
         email=telegram_user_db.email,
         username=telegram_user_db.username,
         role=telegram_user_db.role,
+        created_at=telegram_user_db.created_at,
+        updated_at=telegram_user_db.updated_at,
     )
 
 def domain_to_db(telegram_user: TelegramUser) -> TelegramUsers:
@@ -28,6 +30,7 @@ def domain_to_db(telegram_user: TelegramUser) -> TelegramUsers:
         email=telegram_user.email,
         username=telegram_user.username,
         role=telegram_user.role,
+        created_at=telegram_user.created_at,
     )
 
 class TelegramUserMongoRepository(TelegramUserPort):
@@ -46,6 +49,12 @@ class TelegramUserMongoRepository(TelegramUserPort):
 
     async def get_user_by_telegram_id(self, telegram_id: str) -> Optional[TelegramUser]:
         user = await TelegramUsers.find_one(TelegramUsers.userId == telegram_id)
+        if user:
+            return db_to_domain(user)
+        return None
+
+    async def get_user_by_email(self, email: str) -> Optional[TelegramUser]:
+        user = await TelegramUsers.find_one(TelegramUsers.email == email)
         if user:
             return db_to_domain(user)
         return None

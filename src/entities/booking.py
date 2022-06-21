@@ -6,7 +6,7 @@ from pydantic.main import BaseModel
 
 
 class Booking(BaseModel):
-    status: Literal["NONE", "QUEUED", "BOOKED", "SCHEDULED"]
+    status: Literal["NONE", "QUEUED", "BOOKED", "SCHEDULED", "CANCELED"]
     id: str
     enabled: bool
     cancel_id: Optional[str]
@@ -22,6 +22,9 @@ class Booking(BaseModel):
     
     def is_scheduled(self) -> bool:
         return self.status == "SCHEDULED"
+    
+    def is_canceled(self) -> bool:
+        return self.status == "CANCELED"
        
     def has_started(self) -> bool:
         return datetime.datetime.now() > self.start_timestamp

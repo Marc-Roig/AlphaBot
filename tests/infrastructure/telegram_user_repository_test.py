@@ -47,6 +47,11 @@ async def test_create_user_already_in_db(telegram_user):
         user = TelegramUser(id="000", email="test2@gmail.com", username="test2", role="USER")
         await telegram_user_repository.add_user(user)
 
+async def test_get_user_by_email(telegram_user, telegram_user2):
+    user = await telegram_user_repository.get_user_by_email(telegram_user.email)
+    assert user
+    assert user.email == telegram_user.email
+
 async def test_get_all_user_ids(telegram_user, telegram_user2):
     user_ids = await telegram_user_repository.get_all_user_ids()
     assert len(user_ids) == 2 

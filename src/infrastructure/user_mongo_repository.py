@@ -4,6 +4,7 @@ from httpx import AsyncClient
 import requests # type: ignore
 import datetime
 from beanie import Document
+from pydantic import Field
 
 from src.output_ports.user_port import Cookie, CredentialsError, UserPort
 
@@ -13,6 +14,8 @@ _client = AsyncClient()
 class Users(Document):
     email: str
     token: str
+    created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
 
 
 class UserMongoRepository(UserPort):
