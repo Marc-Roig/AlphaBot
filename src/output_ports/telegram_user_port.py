@@ -13,6 +13,9 @@ class TelegramUser(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
+    def is_admin(self) -> bool:
+        return self.role == "ADMIN"
+
 class TelegramUserPort(Protocol):
 
     async def add_user(self, user: TelegramUser) -> None:

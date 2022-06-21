@@ -39,4 +39,6 @@ async def cancel_booking(class_name: str, date: datetime.datetime, mail: str) ->
     else:
         raise NotBookedException()
 
+    booking.status = "CANCELED"
+
     return booking

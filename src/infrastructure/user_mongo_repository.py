@@ -43,7 +43,7 @@ class UserMongoRepository(UserPort):
 
         await Users \
             .find_one(Users.email == user.email) \
-            .upsert({"$set": {"token": user.token}}, on_insert=user)
+            .upsert({"$set": {"token": user.token, "updated_at": user.updated_at}}, on_insert=user)
 
         # Return cookie domain object
         return {

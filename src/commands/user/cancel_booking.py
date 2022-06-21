@@ -29,8 +29,6 @@ async def handler(update: Update, context: AlphaContext) -> None:
     message = update.effective_message.text
     await bot.send_chat_action(chat, "typing")
     
-    date, class_name = get_date_and_class_from_message(message)
-
     # Store message in context for later use
     context.user_data["booking"] = message # type: ignore
 
@@ -91,5 +89,4 @@ async def dismiss_cancel_h(update: Update, context: AlphaContext) -> None:
     chat = update.effective_message.chat_id
     query = update.callback_query
     
-    print('hello')
     await query.answer()

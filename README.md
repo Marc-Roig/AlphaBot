@@ -40,24 +40,24 @@ python alphabot.py
 - [X] Database migrations (🧪 Test pending)
 - [X] Message user an scheduled booking has succeeded (🧪 Test pending)
 - [X] Message user an scheduled booking has failed (🧪 Test pending)
-- [ ] Create public command to ask for an invite
-- [ ] Create domain entities for 
-    - [ ] User
-    - [ ] Scheduled Booking
-    - [ ] Telegram User
+- [X] Create public command to ask for an invite (🧪 Test pending)
 
 
 ## 🔖 Release 0.3.0
 - [ ] Show class members
 - [ ] Do not go backwards in calendar
 - [ ] Remove past days and use a - 
+- [ ] Remove todays classes that already have started
 - [ ] Log in reminder every 2 months
 - [ ] Add logger (loguru) ~
-
+- [ ] Create domain entities for 
+    - [ ] User
+    - [ ] Scheduled Booking
+    - [ ] Telegram User
+    
 ## 🔖 Release 0.4.0
 - [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
 - [ ] Create user command to ask for booking validation
-- [ ] Retries for booking
 - [ ] Tidy commands
     - Create callback query handler folder
     - Create mess handler folder

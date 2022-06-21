@@ -4,7 +4,6 @@ from src.output_ports.user_port import CredentialsError
 
 from src.utils import decorators
 from src.utils.telegram_context import AlphaContext
-from src.use_cases.set_alpha_token import set_user_alpha_token as set_alpha_token_uc
 from src.use_cases.login import login as login_uc
 
 START = 0

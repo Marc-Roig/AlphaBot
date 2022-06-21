@@ -8,8 +8,8 @@ from src.commands.user import (
     cancel_booking,
 )
 from src.commands.user.conversation_handlers import (
-    set_token, 
-    aimh_login as login
+    aimh_login as login,
+    new_user_invite
 )
 from src.commands.jobs import book_scheduled
 from telegram.ext import (
@@ -34,30 +34,22 @@ def add_user_commands(app: Application) -> None:
     
     # Command handlers
     add_handler(CMH("help", help.init))
-    add_handler(CMH("start", help.init))
     add_handler(CMH("calendar", display_calendar.handler))
 
     # Callback query handlers
-    add_handler(CQH(display_calendar.handler, pattern="book"))
-    add_handler(CQH(list_booked_classes.handler, pattern="list_bookings"))
+    add_handler(CQH(display_calendar.handler, pattern="^book"))
+    add_handler(CQH(list_booked_classes.handler, pattern="^list_bookings"))
     add_handler(CQH(list_classes.handler, pattern=QH_CALENDAR_PATTERN))
-    add_handler(CQH(cancel_booking.confirm_cancel_h, pattern="confirm_cancel"))
-    add_handler(CQH(cancel_booking.dismiss_cancel_h, pattern="dismiss_cancel"))
+    add_handler(CQH(cancel_booking.confirm_cancel_h, pattern="^confirm_cancel"))
+    add_handler(CQH(cancel_booking.dismiss_cancel_h, pattern="^dismiss_cancel"))
+    add_handler(CQH(new_user_invite.accept_invitation, pattern="^accept_invite"))
+    add_handler(CQH(new_user_invite.decline_invitation, pattern="^decline_invite"))
 
     # Message handlers
     add_handler(MGH(Regex("\d{2}:\d{2}h \| \d{2}-\d{2}-\d{2} \| [A-Za-z0-9_ -]+ \(BOOKED\)"), cancel_booking.handler))
     add_handler(MGH(Regex("\d{2}:\d{2}h \| \d{2}-\d{2}-\d{2} \| [A-Za-z0-9_ -]+$"), make_booking.handler))
 
     # Conversation handlers
-    add_handler( # Set token Conversation
-        CH(
-            entry_points=[CMH("token", set_token.start)], # Ask for the token
-            states={
-                set_token.START: [MGH(Regex("^(.*?)+$"), set_token.set_token)], # Token user response
-            },
-            fallbacks=[CMH("cancel", set_token.cancel)],
-        )
-    )
     add_handler( # Login Conversation
         CH(
             entry_points=[ 
@@ -70,6 +62,17 @@ def add_user_commands(app: Application) -> None:
             fallbacks=[CMH("cancel", login.cancel)],
         ),
     )
+    add_handler( # Start Conversation for new users
+        CH(
+            entry_points=[ 
+                CMH("start", new_user_invite.start), # Ask for password
+            ],
+            states={
+                new_user_invite.START: [MGH(Regex("^(.*?)+$"), new_user_invite.send_email)], # Password user response
+            },
+            fallbacks=[CMH("cancel", new_user_invite.cancel)],
+        ),
+    )
 
 def add_repeating_jobs(app: Application) -> None:
 
@@ -79,4 +82,5 @@ def add_repeating_jobs(app: Application) -> None:
     seconds_until_next_minute = 60 - datetime.datetime.now().second + 2
 
     # Book scheduled classes
-    jq.run_repeating(book_scheduled.handler, interval=60.0, first=seconds_until_next_minute)
+    # jq.run_repeating(book_scheduled.handler, interval=60.0, first=seconds_until_next_minute)
+    jq.run_repeating(book_scheduled.handler, interval=5)

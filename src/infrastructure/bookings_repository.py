@@ -13,35 +13,51 @@ from src.output_ports.user_port import UserPort
 
 # TODO: Errors file
 class CouldNotGetBookingsException(Exception):
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 class FullClassException(Exception):
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 class NotAllowedForThisClassException(Exception):
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 class ExceededBookingLimitException(Exception):
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 class ExceededDailyBookingLimitException(Exception):
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 class CanNotBookAtTheSameTimeException(Exception):
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 class CanNotBookInAdvanceException(Exception):
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 class CanNotCancelBookingException(Exception):
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 # TODO: Constants file
@@ -264,24 +280,24 @@ class BookingsRepository:
                 return booking
 
             elif state == -1:
-                raise FullClassException()
+                raise FullClassException("Class is full")
 
             elif state == -2:
-                raise NotAllowedForThisClassException()
+                raise NotAllowedForThisClassException("Not allowed for this class")
 
             elif state == -8:
-                raise ExceededDailyBookingLimitException()
+                raise ExceededDailyBookingLimitException("Exceeded daily booking limit")
 
             elif state == -12:
 
                 error_key = response.json().get("errorMssgLang", "")
 
                 if error_key == "HASSUPERADOLIMITCONTR":
-                    raise ExceededBookingLimitException()
+                    raise ExceededBookingLimitException("The booking limit has been reached")
                 elif error_key == "NOPUEDESRESERVAMISMAHORA":
-                    raise CanNotBookAtTheSameTimeException()
+                    raise CanNotBookAtTheSameTimeException("You can not book at the same time")
                 elif error_key == "ERROR_ANTELACION_CLIENTE":
-                    raise CanNotBookInAdvanceException()
+                    raise CanNotBookInAdvanceException("You can not book in advance")
 
         # TODO: Manage errors
         raise Exception("Could not make booking")

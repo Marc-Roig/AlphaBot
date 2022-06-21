@@ -4,7 +4,7 @@ import datetime
 import calendar
 
 # Query Handler pattern
-QH_CALENDAR_PATTERN = "DAY|PREV-MONTH|NEXT-MONTH|IGNORE"
+QH_CALENDAR_PATTERN = "^DAY|^PREV-MONTH|^NEXT-MONTH|^IGNORE"
 
 def create_callback_data(action,year,month,day):
     """ Create the callback data associated to each button"""
@@ -96,10 +96,6 @@ async def process_calendar_selection(bot: Bot, update: Update) -> Optional[datet
         await bot.answer_callback_query(callback_query_id= query.id)
 
     elif action == "DAY":
-        # await bot.edit_message_text(text=query.message.text,
-        #     chat_id=query.message.chat_id,
-        #     message_id=query.message.message_id
-        #     )
         return datetime.datetime(int(year),int(month),int(day))
     
     elif action == "PREV-MONTH":

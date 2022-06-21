@@ -6,7 +6,7 @@ def init(func):
     @wraps(func)
     async def wrapped(update, context):
 
-        if update.effective_user is None:
+        if update.effective_user is None or update.effective_user.id is None:
             return False
 
         user_id = str(update.effective_user.id)

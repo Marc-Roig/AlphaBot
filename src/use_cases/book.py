@@ -7,24 +7,27 @@ class BookingDoesNotExistException(Exception):
     """
     Raised when looking for a booking that does not exist
     """
-
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 class AlreadyBookedException(Exception):
     """
     Raised when trying to book an already booked class
     """
-
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 class ClassAlreadyStartedException(Exception):
     """
     Raised when trying to book an already booked class
     """
-
-    pass
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
 
 
 async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> Booking:
@@ -37,16 +40,16 @@ async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> B
         raise BookingDoesNotExistException(
             f"Booking {booking_id} on date {date} does not exist"
         )
-        
+
     # TODO: Manage retries
     was_booking_scheduled = booking.is_scheduled()
 
     if booking.has_started():
-        raise ClassAlreadyStartedException()
+        raise ClassAlreadyStartedException("This class has already started")
 
     # If it is already booked
     if booking.is_booked():
-        raise AlreadyBookedException()
+        raise AlreadyBookedException("This class is already booked")
     
     # Check if its in range to book
     elif booking.is_bookable():
@@ -58,6 +61,7 @@ async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> B
                 NotAllowedForThisClassException, 
                 ExceededBookingLimitException, 
                 CanNotBookAtTheSameTimeException):
+            booking.status = "CANCELED"
             print(f'Discarding booking {booking_id} at {date}')
             pass
 

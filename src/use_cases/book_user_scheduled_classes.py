@@ -1,8 +1,13 @@
 import datetime
+import logging
 from typing import Awaitable
+
 from src.use_cases.book import make_booking
 from src.entities.booking import Booking
 from src.infrastructure import bookings_scheduler_repository
+
+
+logger = logging.getLogger("book_user_scheduled_classes")
 
 
 class BookingDoesNotExistException(Exception):
@@ -22,13 +27,11 @@ class AlreadyBookedException(Exception):
 
 async def _make_booking(booking_id: int, start_timestamp: datetime.datetime, mail: str) -> Booking:
     try:
-        print(f"Trying to book {booking_id} at {start_timestamp} for {mail}. Time {datetime.datetime.now()}") 
-        # TODO: Manage retries
+        logger.info(f"Trying to book {booking_id} at {start_timestamp} for {mail}. Time {datetime.datetime.now()}") 
         booking = await make_booking(booking_id, start_timestamp, mail)
         return booking
     except Exception as e:
-        print(e)
-
+        logger.error(e)
     return None
 
 async def make_bookings(mail: str) -> list[Awaitable[Booking]]:
