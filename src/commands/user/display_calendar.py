@@ -13,7 +13,10 @@ async def handler(update: Update, context: CallbackContext) -> None:
         return
 
     bot = context.bot
+    query = update.callback_query
 
+    await query.answer()
+    
     await bot.send_message(update.effective_message.chat_id,
                      f"Select Day",
                      reply_markup=create_calendar(2022, 6))

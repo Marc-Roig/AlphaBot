@@ -45,8 +45,11 @@ python alphabot.py
 
 ## 🔖 Release 0.3.0
 - [ ] Show class members
-- [ ] Do not go backwards in calendar
-- [ ] Remove past days and use a - 
+- [X] Remove cancelation or booking message from user
+- [X] Do not go backwards in calendar
+- [X] Remove past days and use a - 
+- [X] Button to close class selection from a given day. 
+- [ ] Remove Select class from X X message somehow.
 - [ ] Remove todays classes that already have started
 - [ ] Log in reminder every 2 months
 - [ ] Add logger (loguru) ~
@@ -54,7 +57,9 @@ python alphabot.py
     - [ ] User
     - [ ] Scheduled Booking
     - [ ] Telegram User
-    
+- [ ] Add release notes message to telegram users
+- [ ] Add how it works notes for new users
+
 ## 🔖 Release 0.4.0
 - [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
 - [ ] Create user command to ask for booking validation

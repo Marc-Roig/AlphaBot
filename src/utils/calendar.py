@@ -27,6 +27,9 @@ def create_calendar(year=None,month=None):
     if year == None: year = now.year
     if month == None: month = now.month
     
+    # Used to hide past days and disable navigation to past months
+    is_current_month = (year == now.year and month == now.month)
+
     data_ignore = create_callback_data("IGNORE", year, month, 0)
 
     # Keyboard create
@@ -53,13 +56,18 @@ def create_calendar(year=None,month=None):
     for week in my_calendar:
         row=[]
         for day in week: # type: ignore
-            if(day==0): #type: ignore 
+            if(int(day)==0):
                 row.append(InlineKeyboardButton(" ", callback_data=data_ignore))
+            # Display as - the past days
+            elif is_current_month and int(day) < now.day:
+                row.append(InlineKeyboardButton("-", callback_data=data_ignore))
+            # Display the day number and add callback data
             else:
                 text = str(day)
-                # Check if day is today
+                # If day is today, set the button to < number >
                 if year == now.year and month == now.month and int(day) == now.day:
-                    text = "<" + text + ">"
+                    text = "(" + text + ")"
+
                 row.append(
                     InlineKeyboardButton(
                         text,
@@ -70,7 +78,11 @@ def create_calendar(year=None,month=None):
 
     #Last row - Buttons
     row=[]
-    row.append(InlineKeyboardButton("<",callback_data=create_callback_data("PREV-MONTH",year,month,day)))
+    # Disable navigation to previous month if displaying current month 
+    if is_current_month:
+        row.append(InlineKeyboardButton(" ", callback_data=data_ignore))
+    else:
+        row.append(InlineKeyboardButton("<",callback_data=create_callback_data("PREV-MONTH",year,month,day)))
     row.append(InlineKeyboardButton(" ",callback_data=data_ignore))
     row.append(InlineKeyboardButton(">",callback_data=create_callback_data("NEXT-MONTH",year,month,day)))
     keyboard.append(row)

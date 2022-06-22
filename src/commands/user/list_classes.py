@@ -59,7 +59,6 @@ async def _get_day_classes(date: datetime, email: str) -> ReplyKeyboardMarkup:
                 callback_data=create_classes_callback_data("BOOK", date, booking.id)
             )
         ])
-
     return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
 @decorators.user

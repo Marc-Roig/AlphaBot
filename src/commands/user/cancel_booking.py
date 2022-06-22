@@ -19,6 +19,7 @@ def get_date_and_class_from_message(message: str) -> Tuple[datetime, str]:
 
 
 @decorators.user
+@decorators.delete_after
 async def handler(update: Update, context: AlphaContext) -> None:
     
     if (not update.effective_message) or (not context.user_email):
@@ -42,7 +43,7 @@ async def handler(update: Update, context: AlphaContext) -> None:
 
 
 @decorators.user
-@decorators.delete
+@decorators.delete_after
 async def confirm_cancel_h(update: Update, context: AlphaContext) -> None:
     
     if (not update.effective_message) or (not context.user_email):

@@ -17,6 +17,7 @@ def get_date_and_class_from_message(message: str) -> Tuple[datetime, str]:
 
 
 @decorators.user
+@decorators.delete_after
 async def handler(update: Update, context: AlphaContext) -> None:
     
     if (not update.effective_message) or (not context.user_email):
