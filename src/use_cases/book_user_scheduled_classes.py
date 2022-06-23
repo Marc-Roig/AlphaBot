@@ -2,7 +2,7 @@ import datetime
 import logging
 from typing import Awaitable
 
-from src.use_cases.book import make_booking
+from src.use_cases.book import make_booking_by_id
 from src.entities.booking import Booking
 from src.infrastructure import bookings_scheduler_repository
 
@@ -28,7 +28,7 @@ class AlreadyBookedException(Exception):
 async def _make_booking(booking_id: int, start_timestamp: datetime.datetime, mail: str) -> Booking:
     try:
         logger.info(f"Trying to book {booking_id} at {start_timestamp} for {mail}. Time {datetime.datetime.now()}") 
-        booking = await make_booking(booking_id, start_timestamp, mail)
+        booking = await make_booking_by_id(booking_id, start_timestamp, mail)
         return booking
     except Exception as e:
         logger.error(e)

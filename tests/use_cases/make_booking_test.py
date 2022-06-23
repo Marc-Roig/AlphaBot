@@ -8,7 +8,7 @@ import pytest
 import asyncio
 import os
 
-from src.use_cases.book import make_booking
+from src.use_cases.book import make_booking_by_id
 
 user_access_repository = UserMongoRepository()
 bookings_scheduler_repository = BookingsSchedulerMongoRepository()
@@ -42,7 +42,7 @@ async def test_make_booking(client: None) -> None:
 
     assert bookable_class
 
-    bookable_class = await make_booking(
+    bookable_class = await make_booking_by_id(
         booking_id=bookable_class.id,
         date=bookable_class.start_timestamp,
         mail="marc12info@gmail.com",
@@ -64,7 +64,7 @@ async def test_schedule_full_booking(client: None) -> None:
 
     assert scheduled_class
 
-    scheduled_class = await make_booking(
+    scheduled_class = await make_booking_by_id(
         booking_id=scheduled_class.id,
         date=scheduled_class.start_timestamp,
         mail="marc12info@gmail.com"
@@ -86,7 +86,7 @@ async def test_schedule_future_booking() -> None:
 
     assert scheduled_class
 
-    scheduled_class = await make_booking(
+    scheduled_class = await make_booking_by_id(
         booking_id=scheduled_class.id,
         date=scheduled_class.start_timestamp,
         mail="marc12info@gmail.com"

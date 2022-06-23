@@ -92,7 +92,6 @@ async def accept_invitation(update: Update, context: AlphaContext) -> None:
 
     # Get the email from the callback data
     _, mail, user_id = query.data.split(";")
-    
     # Add user to the database
     try:
         await telegram_user_repository.add_user(
@@ -112,7 +111,10 @@ async def accept_invitation(update: Update, context: AlphaContext) -> None:
         )
 
     except:
+        # Notify admin
         await bot.send_message(chat, "❌ Something went wrong. Discarding the invitation.")
+        # Notify user
+        await bot.send_message(user_id, "❌ Something went wrong. Your invitation was discarded form some reason. Try again")
 
 
 @decorators.admin

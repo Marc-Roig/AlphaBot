@@ -2,7 +2,6 @@
 Cron to book scheduled classes.
 """
 from telegram.ext import CallbackContext
-from src.entities.booking import Booking
 from src.output_ports.telegram_user_port import TelegramUser
 from src.use_cases.book_user_scheduled_classes import make_bookings
 from src.infrastructure import user_repository, telegram_user_repository
@@ -29,24 +28,25 @@ async def _make_user_bookings(context: CallbackContext, user_email: str) -> None
         if booking.is_canceled():
             await context.bot.send_message(
                 telegram_user.id, 
-                f"🤖 Your booking for {booking.class_name} - {booking.start_timestamp.strftime('%A %d. %H:%M')} has been canceled"
+                f"🤖❌ Booking discarded *{booking.class_name} - {booking.start_timestamp.strftime('%A %d. %H:%M')}*. Something went wrong",
+                parse_mode="Markdown"
             )
             
         if booking.is_booked():
             await context.bot.send_message(
                 telegram_user.id, 
-                f"🤖 Your booking *{booking.class_name} - {booking.start_timestamp.strftime('%A %d. %H:%M')}* has been booked",
+                f"🤖✅ Booked *{booking.class_name} - {booking.start_timestamp.strftime('%A %d. %H:%M')}h*",
                 parse_mode='Markdown'
             )
 
 
 async def handler(context: CallbackContext) -> None:
     
-    users_email = await user_repository.get_all()
+    users = await user_repository.get_all()
     bookings_promises = []
 
     # Make all bookings
-    for user in users_email:
-        bookings_promises.append(_make_user_bookings(context, user))
+    for user in users:
+        bookings_promises.append(_make_user_bookings(context, user.email))
 
     await asyncio.gather(*bookings_promises) 

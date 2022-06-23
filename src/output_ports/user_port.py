@@ -2,6 +2,8 @@ from typing import Optional, Protocol
 from http.cookiejar import Cookie as HttpCookie, CookieJar
 from pydantic import BaseModel
 
+from src.entities.user import User
+
 class CredentialsError(Exception):
     pass
 
@@ -30,5 +32,5 @@ class UserPort(Protocol):
     async def clean_cookies(self) -> None:
         pass
 
-    async def get_all(self) -> list[str]:
+    async def get_all(self) -> list[User]:
         pass

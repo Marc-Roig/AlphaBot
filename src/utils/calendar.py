@@ -3,9 +3,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRe
 import datetime
 import calendar
 
-# Query Handler pattern
-QH_CALENDAR_PATTERN = "^DAY|^PREV-MONTH|^NEXT-MONTH|^IGNORE"
-
 def create_callback_data(action,year,month,day):
     """ Create the callback data associated to each button"""
     return ";".join([action,str(year),str(month),str(day)])

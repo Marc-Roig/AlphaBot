@@ -13,7 +13,7 @@ from src.utils.telegram_context import AlphaContext
 
 
 def get_date_and_class_from_message(message: str) -> Tuple[datetime, str]:
-    hour, day, class_name = message.split(" | ")
+    hour, day, class_name, _ = message.split(" | ")
     date = datetime.strptime(f"{day} {hour}", "%y-%m-%d %H:%Mh")
     return date, class_name.removesuffix(' (BOOKED)')
 

@@ -1,9 +1,4 @@
-"""
-
-"""
-from typing import Any
-from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, Bot
-from telegram.ext import CallbackContext
+from telegram import ReplyKeyboardRemove, Update, ReplyKeyboardMarkup, KeyboardButton, Bot
 from datetime import datetime
 
 from src.use_cases.list_daily_classes import list_daily_classes as list_daily_classes_uc
@@ -49,7 +44,13 @@ async def _get_day_classes(date: datetime, email: str) -> ReplyKeyboardMarkup:
 
     for booking in bookings:
         
-        button_text = f"{booking.start_timestamp.strftime('%H:%M')}h | {date.strftime('%y-%m-%d')} | {booking.class_name}"
+        # Filter bookings if class ended
+        if booking.end_timestamp < datetime.now():
+            continue
+
+        button_text = f"{booking.start_timestamp.strftime('%H:%M')}h "
+        button_text += f"| {date.strftime('%y-%m-%d')} "
+        button_text += f"| {booking.class_name} | {booking.get_occupation_string()} "
         if booking.is_booked() or booking.is_scheduled():
             button_text += " (BOOKED)"
         
@@ -59,6 +60,10 @@ async def _get_day_classes(date: datetime, email: str) -> ReplyKeyboardMarkup:
                 callback_data=create_classes_callback_data("BOOK", date, booking.id)
             )
         ])
+
+    # Add cancel button
+    keyboard.append([KeyboardButton("❌ Close", callback_data="discard_booking")])
+
     return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
 @decorators.user
@@ -81,4 +86,17 @@ async def handler(update: Update, context: AlphaContext) -> None:
         message_text = f"Select class from {selected_date.strftime('%A')} {selected_date.strftime('%d')}th"
         await bot.send_message(chat, message_text, reply_markup=classes)
 
+
+@decorators.user
+@decorators.delete
+async def discard_booking(update: Update, context: AlphaContext) -> None:
+
+    if (not update.effective_message) or (not context.user_email):
+        return
+    
+    bot: Bot = context.bot
+    chat = update.effective_message.chat_id
+
+    message = await bot.send_message(chat, "Booking discarded", reply_markup=ReplyKeyboardRemove())
+    await message.delete()
 

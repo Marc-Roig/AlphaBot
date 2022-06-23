@@ -30,18 +30,7 @@ class ClassAlreadyStartedException(Exception):
         self.errors = errors
 
 
-async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> Booking:
-
-    # Find booking
-    booking = await bookings_repository.get_booking_by_id(
-        day=date, booking_id=booking_id, mail=mail
-    )
-    if not booking:
-        raise BookingDoesNotExistException(
-            f"Booking {booking_id} on date {date} does not exist"
-        )
-
-    # TODO: Manage retries
+async def make_booking(booking: Booking, mail: str) -> Booking:
     was_booking_scheduled = booking.is_scheduled()
 
     if booking.has_started():
@@ -62,14 +51,14 @@ async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> B
                 ExceededBookingLimitException, 
                 CanNotBookAtTheSameTimeException):
             booking.status = "CANCELED"
-            print(f'Discarding booking {booking_id} at {date}')
+            print(f'Discarding booking {booking.id} at {booking.start_timestamp}')
             pass
 
         if was_booking_scheduled:
             await bookings_scheduler_repository.remove_user_scheduled_booking(booking=booking, mail=mail)
 
-    # Class can be booked but is full
-    elif booking.is_in_range_to_book() and booking.is_full() and not was_booking_scheduled:
+    # Class can be booked but is full. Schedule it if it wasn't already
+    elif booking.is_in_range_to_book() and booking.is_full() and (not was_booking_scheduled):
         
         # Remove first the scheduled class if it was
         if was_booking_scheduled:
@@ -81,7 +70,7 @@ async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> B
             mail=mail,
         )
 
-    # Schedule booking
+    # Schedule booking if it wasn't already
     elif (booking.status == "NONE") and (not was_booking_scheduled):
         booking = await bookings_scheduler_repository.schedule_booking(
             booking=booking,
@@ -90,3 +79,17 @@ async def make_booking(booking_id: str, date: datetime.datetime, mail: str) -> B
         )
 
     return booking
+
+
+async def make_booking_by_id(booking_id: str, date: datetime.datetime, mail: str) -> Booking:
+
+    # Find booking
+    booking = await bookings_repository.get_booking_by_id(
+        day=date, booking_id=booking_id, mail=mail
+    )
+    if not booking:
+        raise BookingDoesNotExistException(
+            f"Booking {booking_id} on date {date} does not exist"
+        )
+
+    return await make_booking(booking=booking, mail=mail)

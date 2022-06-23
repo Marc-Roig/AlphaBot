@@ -46,3 +46,8 @@ class Booking(BaseModel):
         # 4 days before class
         return (self.start_timestamp - datetime.timedelta(days=4)).replace(second=0, microsecond=0)
 
+    def get_occupation_string(self) -> str:
+        string =  f"{self.occupation}/{self.limit}"
+        if self.wait_list_occupation > 0:
+            string += f" ({self.wait_list_occupation})"
+        return string
