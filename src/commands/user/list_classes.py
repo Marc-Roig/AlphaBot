@@ -47,12 +47,17 @@ async def _get_day_classes(date: datetime, email: str) -> ReplyKeyboardMarkup:
         # Filter bookings if class ended
         if booking.end_timestamp < datetime.now():
             continue
-
+        
+        # Display time | date | class name
         button_text = f"{booking.start_timestamp.strftime('%H:%M')}h "
         button_text += f"| {date.strftime('%y-%m-%d')} "
         button_text += f"| {booking.class_name} | {booking.get_occupation_string()} "
-        if booking.is_booked() or booking.is_scheduled():
+        
+        # Mark if it's booked or scheduled
+        if booking.is_booked():
             button_text += " (BOOKED)"
+        elif booking.is_scheduled():
+            button_text += " (SCHEDULED)"
         
         keyboard.append([
             KeyboardButton(

@@ -51,10 +51,11 @@ python alphabot.py
 - [X] Send message to all users
 
 ## 🔖 Release 0.3.0
-- [ ] Add how to m enu with gifs to show how to do everything
+- [X] Show scheduled classes as (SCHEDULED) in the class list.
+- [ ] Remove Select class from X X message.
+- [ ] Add how to menu with gif's to show how to do everything
 - [ ] Unify all handlers names in telegram commands
 - [ ] Show more buttons in help message if you are an admin
-- [ ] Remove Select class from X X message.
 - [ ] Add logger (loguru) ~
 - [ ] Add release notes message to telegram users
 - [ ] Add how it works notes for new users

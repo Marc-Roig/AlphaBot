@@ -63,12 +63,12 @@ def add_user_commands(app: Application) -> None:
     add_handler(CQH(list_classes.handler, pattern="^DAY|^PREV-MONTH|^NEXT-MONTH|^IGNORE"))
 
     # Cancel Booking
-    add_handler(MGH(Regex("\d{2}:\d{2}h \| \d{2}-\d{2}-\d{2} \| [A-Za-z0-9_ -\|\(\)\/]+ \(BOOKED\)"), cancel_booking.handler))
+    add_handler(MGH(Regex("^\d{2}:\d{2}h \| \d{2}-\d{2}-\d{2} \| [A-Za-z0-9_ -\|\(\)\/]+ (\(BOOKED\)|\(SCHEDULED\))"), cancel_booking.handler))
     add_handler(CQH(cancel_booking.confirm_cancel_h, pattern="^confirm_cancel"))
     add_handler(CQH(cancel_booking.dismiss_cancel_h, pattern="^dismiss_cancel"))
 
     # Make booking
-    add_handler(MGH(Regex("\d{2}:\d{2}h \| \d{2}-\d{2}-\d{2} \| [A-Za-z0-9_ -\|\(\)\/]+$"), make_booking.handler))
+    add_handler(MGH(Regex("^\d{2}:\d{2}h \| \d{2}-\d{2}-\d{2} \| [A-Za-z0-9_ -\|\(\)\/]+$"), make_booking.handler))
     add_handler(MGH(Regex("^❌ Close"), list_classes.discard_booking)) # Close list of classes
 
     # Login Conversation
