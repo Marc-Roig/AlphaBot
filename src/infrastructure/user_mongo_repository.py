@@ -5,6 +5,7 @@ import requests # type: ignore
 import datetime
 from beanie import Document
 from pydantic import Field
+from src.entities.user import User
 
 from src.output_ports.user_port import Cookie, CredentialsError, UserPort
 
@@ -18,6 +19,24 @@ class Users(Document):
     updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
 
 
+def db_to_domain(user: Users) -> User:
+    return User(
+        email=user.email,
+        token=user.token,
+        created_at=user.created_at,
+        updated_at=user.updated_at
+    )
+
+
+def domain_to_db(user: User) -> Users:
+    return Users(
+        email=user.email,
+        token=user.token,
+        created_at=user.created_at,
+        updated_at=user.updated_at
+    )
+
+    
 class UserMongoRepository(UserPort):
 
 
@@ -121,5 +140,5 @@ class UserMongoRepository(UserPort):
     async def clean_cookies(self) -> None:
         pass
 
-    async def get_all(self) -> list[str]:
-        return [user.email async for user in Users.find()]
+    async def get_all(self) -> list[User]:
+        return [db_to_domain(user) async for user in Users.find()]

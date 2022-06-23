@@ -32,7 +32,7 @@ pip install -r requirements.txt
 python alphabot.py
 ```
 
-# 🛣️ Roadmap
+# 🛣️ Road map
 
 ## 🔖 Release 0.2.0
 - [X] If you do not have more bookings available discard booking (🧪 Test pending)
@@ -41,32 +41,41 @@ python alphabot.py
 - [X] Message user an scheduled booking has succeeded (🧪 Test pending)
 - [X] Message user an scheduled booking has failed (🧪 Test pending)
 - [X] Create public command to ask for an invite (🧪 Test pending)
-
-
-## 🔖 Release 0.3.0
-- [ ] Show class members
-- [X] Remove cancelation or booking message from user
+- [X] Show number of class members
+- [X] Remove cancellation or booking message from user
 - [X] Do not go backwards in calendar
 - [X] Remove past days and use a - 
 - [X] Button to close class selection from a given day. 
-- [ ] Remove Select class from X X message somehow.
-- [ ] Remove todays classes that already have started
-- [ ] Log in reminder every 2 months
+- [X] Log in reminder every 2 months
+- [X] Remove todays classes that already have started
+- [X] Send message to all users
+
+## 🔖 Release 0.3.0
+- [ ] Add how to m enu with gifs to show how to do everything
+- [ ] Unify all handlers names in telegram commands
+- [ ] Show more buttons in help message if you are an admin
+- [ ] Remove Select class from X X message.
 - [ ] Add logger (loguru) ~
-- [ ] Create domain entities for 
-    - [ ] User
-    - [ ] Scheduled Booking
-    - [ ] Telegram User
 - [ ] Add release notes message to telegram users
 - [ ] Add how it works notes for new users
-
-## 🔖 Release 0.4.0
 - [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
 - [ ] Create user command to ask for booking validation
-- [ ] Tidy commands
-    - Create callback query handler folder
-    - Create mess handler folder
-    - Create command handler folder
 
 
-
+# 🧪 Testing steps
+[ ] Book a class
+[ ] Cancel a class
+[ ] Schedule a booking when is more than 4 days ahead
+[ ] Schedule a booking when class is full
+[ ] Discard a booking when 
+    [ ] Exceeded Daily Booking Limit
+    [ ] Not Allowed For that Class
+    [ ] Exceeded Booking Limit
+    [ ] Can not Book at the same time
+[ ] Aimharder login
+[ ] Notifications
+    [ ] Scheduled booking succeeded
+    [ ] Scheduled booking failed
+    [ ] Login about to expire
+[ ] Database migrations
+[ ] Invite
