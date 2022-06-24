@@ -5,6 +5,7 @@ from src.commands.user.aimh_login import add_login_handlers
 from src.commands.user.list_all_bookings import add_list_all_bookings_handlers
 from src.commands.user.make_bookings import add_make_bookings_handlers
 from src.commands.user.request_invite import add_request_invite_handlers
+from src.commands.user.tutorials import add_tutorials_handlers
 
 from src.commands.admin.invite_user import add_user_invite_handlers
 from src.commands.admin.broadcast_all_users import add_broadcast_all_users_handlers
@@ -42,6 +43,7 @@ def add_user_commands(app: Application) -> None:
     add_request_invite_handlers(app)
     add_make_bookings_handlers(app)
     add_login_handlers(app)
+    add_tutorials_handlers(app)
 
 
 def add_admin_commands(app: Application) -> None:

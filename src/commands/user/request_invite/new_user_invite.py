@@ -21,7 +21,8 @@ async def start(update: Update, context: AlphaContext) -> int:
 
     await update.effective_message.reply_text((\
         "Hello! This is AlphaBot, I am here to help you book classes at Alpha Link Crossfit. \n\n"
-        "Before starting, an admin has to grant you access. Please type your *aimharder* email:"
+        "Before starting, an admin has to grant you access. Type ('/cancel' if you want to discard this request). \n\n"
+        "Please type your *aimharder* email:"
     ), parse_mode="Markdown")
 
     return START

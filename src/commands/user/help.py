@@ -18,8 +18,9 @@ async def init(update: Update, context: CallbackContext) -> None:
     # Build the help menu
     buttons = [
         InlineKeyboardButton("💪 Make Bookings", callback_data="book"),
+        InlineKeyboardButton("🔎 List your Bookings", callback_data="list_bookings"),
+        InlineKeyboardButton("📔 Tutorials", callback_data="how_to_list"),
         InlineKeyboardButton("🔐 Login", callback_data="login"),
-        InlineKeyboardButton("🔎 List All Bookings", callback_data="list_bookings"),
     ]
     menu = build_menu(buttons, n_cols=2)
 
