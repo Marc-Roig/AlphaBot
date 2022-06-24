@@ -38,6 +38,8 @@ async def handler_message(update: Update, context: AlphaContext) -> int:
     users_id = await telegram_user_repository.get_all_user_ids()
     user_message_promises = []
 
+    print(message)
+    
     try:
         # Send message to all users
         for user_id in users_id:
@@ -46,11 +48,14 @@ async def handler_message(update: Update, context: AlphaContext) -> int:
             )
             
         await asyncio.gather(*user_message_promises)
+            
+        await bot.send_message(chat, "✅ Message sent to all users")
 
     except Exception as e:
+        print(e)
         await bot.send_message(chat, "❌ Something went wrong. Broadcast failed.")
 
-    await bot.send_message(chat, "✅ Message sent to all users")
+
 
     return ConversationHandler.END
 

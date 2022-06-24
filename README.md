@@ -60,6 +60,9 @@ python alphabot.py
 - [X] Display somehow in calendar the next day to book
 
 ## 🔖 Release 0.4.0
+- [X] Cleaner list of all your bookings
+
+## 🔖 Release 0..0
 - [ ] Add logger (loguru) ~
 - [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
 
