@@ -35,10 +35,10 @@ python alphabot.py
 # 🛣️ Road map
 
 ## 🔖 Release 0.2.0
-- [X] If you do not have more bookings available discard booking (🧪 Test pending)
+- [X] If you do not have more bookings available discard booking 
 - [X] Add timestamps to database entities (createdAt and updatedAt)
-- [X] Database migrations (🧪 Test pending)
-- [X] Message user an scheduled booking has succeeded (🧪 Test pending)
+- [X] Database migrations 
+- [X] Message user an scheduled booking has succeeded
 - [X] Message user an scheduled booking has failed (🧪 Test pending)
 - [X] Create public command to ask for an invite (🧪 Test pending)
 - [X] Show number of class members
@@ -56,12 +56,12 @@ python alphabot.py
 - [X] Store calendar selected date to reduce class name length
 - [X] Unify all handlers names in telegram commands
 - [X] Calendar navigation got bot to get stuck typing
-- [ ] Add how to menu with gif's to show how to do everything
-- [ ] Add how it works notes for new users
-- [ ] Show more buttons in help message if you are an admin
-- [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
-- [ ] Display somehow in calendar the next day to book
+- [X] Add how to menu with gif's to show how to do bookings
+- [X] Display somehow in calendar the next day to book
+
+## 🔖 Release 0.4.0
 - [ ] Add logger (loguru) ~
+- [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
 
 # 🧪 Testing steps
 [ ] Book a class
