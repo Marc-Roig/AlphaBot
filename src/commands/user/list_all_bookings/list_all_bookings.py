@@ -1,6 +1,3 @@
-"""
-
-"""
 from telegram import Update, Bot
 
 from src.use_cases.list_booked_classes import list_booked_classes as list_booked_classes_uc

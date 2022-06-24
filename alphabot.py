@@ -1,5 +1,5 @@
 from telegram.ext import Application, CallbackContext
-from src.commands import add_user_commands, add_repeating_jobs
+from src.commands import add_admin_commands, add_user_commands, add_repeating_jobs
 from src.infrastructure import start_beanie
 import logging
 import os
@@ -45,6 +45,7 @@ def main() -> None:
 
     # Add handlers
     add_user_commands(telegram_app)
+    add_admin_commands(telegram_app)
     add_repeating_jobs(telegram_app)
 
     # Run the bot

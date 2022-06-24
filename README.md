@@ -52,16 +52,16 @@ python alphabot.py
 
 ## 🔖 Release 0.3.0
 - [X] Show scheduled classes as (SCHEDULED) in the class list.
-- [ ] Remove Select class from X X message.
+- [X] Remove Select class from X X message.
+- [X] Store calendar selected date to reduce class name length
+- [X] Unify all handlers names in telegram commands
+- [X] Calendar navigation got bot to get stuck typing
 - [ ] Add how to menu with gif's to show how to do everything
-- [ ] Unify all handlers names in telegram commands
-- [ ] Show more buttons in help message if you are an admin
-- [ ] Add logger (loguru) ~
-- [ ] Add release notes message to telegram users
 - [ ] Add how it works notes for new users
+- [ ] Show more buttons in help message if you are an admin
 - [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
-- [ ] Create user command to ask for booking validation
-
+- [ ] Display somehow in calendar the next day to book
+- [ ] Add logger (loguru) ~
 
 # 🧪 Testing steps
 [ ] Book a class
