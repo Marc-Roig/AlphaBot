@@ -24,6 +24,8 @@ def create_calendar(year=None,month=None):
     if year == None: year = now.year
     if month == None: month = now.month
     
+    next_bookable_day = now + datetime.timedelta(days=4)
+
     # Used to hide past days and disable navigation to past months
     is_current_month = (year == now.year and month == now.month)
 
@@ -64,6 +66,9 @@ def create_calendar(year=None,month=None):
                 # If day is today, set the button to < number >
                 if year == now.year and month == now.month and int(day) == now.day:
                     text = "(" + text + ")"
+
+                if year == now.year and month == now.month and int(day) == next_bookable_day.day:
+                    text = text + "*"
 
                 row.append(
                     InlineKeyboardButton(
