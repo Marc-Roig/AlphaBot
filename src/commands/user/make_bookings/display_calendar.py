@@ -15,7 +15,8 @@ async def handler(update: Update, context: CallbackContext) -> None:
     bot = context.bot
     query = update.callback_query
 
-    await query.answer()
+    if query:
+        await query.answer()
     
     await bot.send_message(update.effective_message.chat_id,
                      f"Select Day",

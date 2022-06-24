@@ -9,7 +9,7 @@ from src.use_cases.login import login as login_uc
 START = 0
 
 @decorators.user
-async def start(update: Update, context: AlphaContext) -> int:
+async def start_handler(update: Update, context: AlphaContext) -> int:
 
     if (not update.effective_message) :
         return ConversationHandler.END
@@ -23,7 +23,7 @@ async def start(update: Update, context: AlphaContext) -> int:
 
 @decorators.delete
 @decorators.user
-async def login(update: Update, context: AlphaContext) -> int:
+async def login_handler(update: Update, context: AlphaContext) -> int:
     
     if (not update.effective_message) or (not context.user_email):
         return ConversationHandler.END
@@ -46,7 +46,7 @@ async def login(update: Update, context: AlphaContext) -> int:
 
 
 @decorators.user
-async def cancel(update: Update, context: AlphaContext) -> int:
+async def cancel_handler(update: Update, context: AlphaContext) -> int:
 
     if (not update.effective_message):
         return ConversationHandler.END

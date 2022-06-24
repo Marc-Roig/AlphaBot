@@ -6,16 +6,25 @@ from telegram import Update, ReplyKeyboardRemove, InlineKeyboardButton, InlineKe
 
 from datetime import datetime
 
+from src.commands.user.make_bookings.list_classes import delete_last_select_message
 from src.use_cases.cancel_booking import BookingDoesNotExistException, NotBookedException, cancel_booking as cancel_booking_uc
 from src.utils import decorators
 from src.utils.menu import build_menu
 from src.utils.telegram_context import AlphaContext
 
 
-def get_date_and_class_from_message(message: str) -> Tuple[datetime, str]:
-    hour, day, class_name, _ = message.split(" | ")
-    date = datetime.strptime(f"{day} {hour}", "%y-%m-%d %H:%Mh")
-    return date, class_name.removesuffix(' (BOOKED)')
+def get_date_and_class_from_message(message: str, context: AlphaContext) -> Tuple[datetime, str]:
+    
+    hour, class_name, _ = message.split(" | ")
+
+    date: datetime = context.user_data.get("last_selected_date") # type: ignore
+    if not date:
+        raise Exception("No date selected")
+    
+    # Replace hours and minutes with the decoded message
+    date = date.replace(hour=int(hour[:2]), minute=int(hour[3:5]), second=0)
+
+    return date, class_name
 
 
 @decorators.user
@@ -53,16 +62,23 @@ async def confirm_cancel_h(update: Update, context: AlphaContext) -> None:
     chat = update.effective_message.chat_id
     query = update.callback_query
     
-    await query.answer()
+    if query:
+        await query.answer()
+
     await bot.send_chat_action(chat, "typing")
 
     try:
+        
         # Get the booking date and class name from context
         booking_message = context.user_data.get('booking') # type: ignore
-        date, class_name = get_date_and_class_from_message(booking_message)
+        date, class_name = get_date_and_class_from_message(booking_message, context)
 
         booking = await cancel_booking_uc(class_name=class_name, date=date, mail=context.user_email)
 
+        # Delete "select message" text if it exists
+        await delete_last_select_message(chat, context)
+
+        # Send message with booking cancel details
         if booking.is_booked() or booking.is_scheduled():
             await bot.send_message(chat, "❌ Something went wrong", reply_markup=ReplyKeyboardRemove())
         else:
@@ -76,7 +92,7 @@ async def confirm_cancel_h(update: Update, context: AlphaContext) -> None:
 
     except Exception as e:
         print(e)
-        await bot.send_message(chat, "❌ Something went wrong", reply_markup=ReplyKeyboardRemove())
+        await bot.send_message(chat, "❌ Something went wrong. Try again", reply_markup=ReplyKeyboardRemove())
     
 
 @decorators.user
@@ -86,8 +102,11 @@ async def dismiss_cancel_h(update: Update, context: AlphaContext) -> None:
     if (not update.effective_message):
         return
 
-    bot = context.bot
     chat = update.effective_message.chat_id
     query = update.callback_query
-    
+
     await query.answer()
+
+    # Delete "select message" text if it exists
+    await delete_last_select_message(chat, context)
+

@@ -1,18 +1,15 @@
-from src.commands.admin.conversation_handlers import (
-    broadcast_all_users
-)
 from src.commands.user import (
-    display_calendar, 
-    help, 
-    list_booked_classes,
-    list_classes, 
-    make_booking, 
-    cancel_booking,
+    help,
 )
-from src.commands.user.conversation_handlers import (
-    aimh_login as login,
-    new_user_invite
-)
+from src.commands.user.aimh_login import add_login_handlers
+from src.commands.user.list_all_bookings import add_list_all_bookings_handlers
+from src.commands.user.make_bookings import add_make_bookings_handlers
+from src.commands.user.request_invite import add_request_invite_handlers
+from src.commands.user.tutorials import add_tutorials_handlers
+
+from src.commands.admin.invite_user import add_user_invite_handlers
+from src.commands.admin.broadcast_all_users import add_broadcast_all_users_handlers
+
 from src.commands.jobs import (
     book_scheduled,
     login_reminder
@@ -30,73 +27,31 @@ import datetime
 from warnings import filterwarnings
 from telegram.warnings import PTBUserWarning
 
+
 filterwarnings(action="ignore", message=r".*CallbackQueryHandler", category=PTBUserWarning)
 
 
 def add_user_commands(app: Application) -> None:
+
     add_handler = app.add_handler
     
     # Help command to list what you can do
     add_handler(CMH("help", help.init))
 
-    # List user bookings
-    add_handler(CQH(list_booked_classes.handler, pattern="^list_bookings"))
+    # Add all user commands
+    add_list_all_bookings_handlers(app)
+    add_request_invite_handlers(app)
+    add_make_bookings_handlers(app)
+    add_login_handlers(app)
+    add_tutorials_handlers(app)
 
-    # New user invite request
-    add_handler( # Start Conversation for new users
-        CH(
-            entry_points=[ 
-                CMH("start", new_user_invite.start), # Ask for password
-            ],
-            states={
-                new_user_invite.START: [MGH(Regex("^(.*?)+$"), new_user_invite.send_email)], # Email address and send request to an admin
-            },
-            fallbacks=[CMH("cancel", new_user_invite.cancel)],
-        ),
-    )
-    add_handler(CQH(new_user_invite.accept_invitation, pattern="^accept_invite"))
-    add_handler(CQH(new_user_invite.decline_invitation, pattern="^decline_invite"))
 
-    # Booking calendar
-    add_handler(CMH("calendar", display_calendar.handler))
-    add_handler(CQH(display_calendar.handler, pattern="^book"))
-    add_handler(CQH(list_classes.handler, pattern="^DAY|^PREV-MONTH|^NEXT-MONTH|^IGNORE"))
+def add_admin_commands(app: Application) -> None:
 
-    # Cancel Booking
-    add_handler(MGH(Regex("\d{2}:\d{2}h \| \d{2}-\d{2}-\d{2} \| [A-Za-z0-9_ -\|\(\)\/]+ \(BOOKED\)"), cancel_booking.handler))
-    add_handler(CQH(cancel_booking.confirm_cancel_h, pattern="^confirm_cancel"))
-    add_handler(CQH(cancel_booking.dismiss_cancel_h, pattern="^dismiss_cancel"))
+    # Add all admin commands
+    add_user_invite_handlers(app)
+    add_broadcast_all_users_handlers(app) # Remember to add a 📣 at the start of the broadcast message
 
-    # Make booking
-    add_handler(MGH(Regex("\d{2}:\d{2}h \| \d{2}-\d{2}-\d{2} \| [A-Za-z0-9_ -\|\(\)\/]+$"), make_booking.handler))
-    add_handler(MGH(Regex("^❌ Close"), list_classes.discard_booking)) # Close list of classes
-
-    # Login Conversation
-    add_handler( 
-        CH(
-            entry_points=[ 
-                CMH("login", login.start), # Ask for password
-                CQH(login.start, pattern="login")
-            ],
-            states={
-                login.START: [MGH(Regex("^(.*?)+$"), login.login)], # Password user response
-            },
-            fallbacks=[CMH("cancel", login.cancel)],
-        ),
-    )
-
-    # Broadcast message
-    add_handler(
-        CH(
-            entry_points=[
-                CMH("broadcast", broadcast_all_users.handler_start)
-            ],
-            states={
-                broadcast_all_users.START: [MGH(Regex("^📣(.*?)+"), broadcast_all_users.handler_message)],
-            },
-            fallbacks=[CMH("cancel", broadcast_all_users.handler_cancel)],
-        )
-    )
 
 def add_repeating_jobs(app: Application) -> None:
 

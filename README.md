@@ -35,10 +35,10 @@ python alphabot.py
 # 🛣️ Road map
 
 ## 🔖 Release 0.2.0
-- [X] If you do not have more bookings available discard booking (🧪 Test pending)
+- [X] If you do not have more bookings available discard booking 
 - [X] Add timestamps to database entities (createdAt and updatedAt)
-- [X] Database migrations (🧪 Test pending)
-- [X] Message user an scheduled booking has succeeded (🧪 Test pending)
+- [X] Database migrations 
+- [X] Message user an scheduled booking has succeeded
 - [X] Message user an scheduled booking has failed (🧪 Test pending)
 - [X] Create public command to ask for an invite (🧪 Test pending)
 - [X] Show number of class members
@@ -51,16 +51,17 @@ python alphabot.py
 - [X] Send message to all users
 
 ## 🔖 Release 0.3.0
-- [ ] Add how to m enu with gifs to show how to do everything
-- [ ] Unify all handlers names in telegram commands
-- [ ] Show more buttons in help message if you are an admin
-- [ ] Remove Select class from X X message.
-- [ ] Add logger (loguru) ~
-- [ ] Add release notes message to telegram users
-- [ ] Add how it works notes for new users
-- [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
-- [ ] Create user command to ask for booking validation
+- [X] Show scheduled classes as (SCHEDULED) in the class list.
+- [X] Remove Select class from X X message.
+- [X] Store calendar selected date to reduce class name length
+- [X] Unify all handlers names in telegram commands
+- [X] Calendar navigation got bot to get stuck typing
+- [X] Add how to menu with gif's to show how to do bookings
+- [X] Display somehow in calendar the next day to book
 
+## 🔖 Release 0.4.0
+- [ ] Add logger (loguru) ~
+- [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
 
 # 🧪 Testing steps
 [ ] Book a class
