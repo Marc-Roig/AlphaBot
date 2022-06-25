@@ -34,6 +34,10 @@ async def make_booking(booking: Booking, mail: str) -> Booking:
     was_booking_scheduled = booking.is_scheduled()
 
     if booking.has_started():
+        
+        if was_booking_scheduled:
+            await bookings_scheduler_repository.remove_user_scheduled_booking(booking=booking, mail=mail)
+
         raise ClassAlreadyStartedException("This class has already started")
 
     # If it is already booked
