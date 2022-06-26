@@ -4,7 +4,7 @@ from telegram.ext import (
     Application,
 )
 
-from src.commands.user.tutorials import how_to_book, how_to
+from src.commands.user.tutorials import how_to_book, how_to, faqs
 
 def add_tutorials_handlers(app: Application) -> None:
 
@@ -12,3 +12,4 @@ def add_tutorials_handlers(app: Application) -> None:
 
     add_handler(CQH(how_to.handler, pattern="^how_to_list"))
     add_handler(CQH(how_to_book.handler, pattern="^how_to_book"))
+    add_handler(CQH(faqs.handler, pattern="^faqs"))
