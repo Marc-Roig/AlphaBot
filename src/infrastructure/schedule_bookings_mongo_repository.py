@@ -77,9 +77,19 @@ class BookingsSchedulerMongoRepository(BookingsSchedulerPort):
         self, booking: Booking, mail: str
     ) -> Booking:
 
-        await ScheduledBookings.find_many({"mail": mail, "booking.id": booking.id}).delete()
+        await self.remove_user_scheduled_booking_by_id_and_date(booking.id, booking.start_timestamp, mail)
 
         if booking.status == "SCHEDULED":
             booking.status = "NONE"
 
         return booking
+
+    async def remove_user_scheduled_booking_by_id_and_date(
+        self, booking_id: str, start_timestamp: datetime, mail: str
+    ) -> Booking:
+        
+        await ScheduledBookings.find_many({
+            "mail": mail, 
+            "booking.id": booking_id, 
+            "booking.start_timestamp": start_timestamp}).delete()
+
