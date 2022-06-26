@@ -22,7 +22,8 @@ async def handler(update: Update, context: AlphaContext) -> None:
     await bot.send_chat_action(chat, "typing")
 
     buttons = [
-        InlineKeyboardButton("📆 Book classes", callback_data="how_to_book")
+        InlineKeyboardButton("❓ FAQs", callback_data="faqs"),
+        InlineKeyboardButton("📆 Book classes", callback_data="how_to_book"),
     ]  
     menu = build_menu(buttons, n_cols=1)
 

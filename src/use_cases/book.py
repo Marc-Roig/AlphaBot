@@ -30,15 +30,24 @@ class ClassAlreadyStartedException(Exception):
         self.errors = errors
 
 
+async def remove_user_scheduled_booking(was_booking_scheduled: bool, booking: Booking, mail: str) -> Booking:
+    if was_booking_scheduled:
+        await bookings_scheduler_repository.remove_user_scheduled_booking(booking=booking, mail=mail)
+    
+
+
 async def make_booking(booking: Booking, mail: str) -> Booking:
     was_booking_scheduled = booking.is_scheduled()
 
+    # Discard booking if class already started
     if booking.has_started():
-        
-        if was_booking_scheduled:
-            await bookings_scheduler_repository.remove_user_scheduled_booking(booking=booking, mail=mail)
-
+        await remove_user_scheduled_booking(was_booking_scheduled, booking, mail)
         raise ClassAlreadyStartedException("This class has already started")
+
+    # Some classes might be disabled (canceled) but you can still book them
+    if not booking.enabled:
+        await remove_user_scheduled_booking(was_booking_scheduled, booking, mail)
+        raise NotAllowedForThisClassException("This class is not allowed for booking")
 
     # If it is already booked
     if booking.is_booked():
@@ -57,16 +66,14 @@ async def make_booking(booking: Booking, mail: str) -> Booking:
             booking.status = "CANCELED"
             print(f'Discarding booking {booking.id} at {booking.start_timestamp}')
             pass
-
-        if was_booking_scheduled:
-            await bookings_scheduler_repository.remove_user_scheduled_booking(booking=booking, mail=mail)
-
+        
+        await remove_user_scheduled_booking(was_booking_scheduled, booking, mail)
+        
     # Class can be booked but is full. Schedule it if it wasn't already
     elif booking.is_in_range_to_book() and booking.is_full() and (not was_booking_scheduled):
         
         # Remove first the scheduled class if it was
-        if was_booking_scheduled:
-            await bookings_scheduler_repository.remove_user_scheduled_booking(booking=booking, mail=mail)
+        await remove_user_scheduled_booking(was_booking_scheduled, booking, mail)
 
         booking = await bookings_scheduler_repository.schedule_booking(
             booking=booking,
@@ -92,6 +99,9 @@ async def make_booking_by_id(booking_id: str, date: datetime.datetime, mail: str
         day=date, booking_id=booking_id, mail=mail
     )
     if not booking:
+        # Scheduled class might have been deleted from aimharder 
+        await bookings_scheduler_repository.remove_user_scheduled_booking_by_id_and_date(booking_id, date, mail)
+
         raise BookingDoesNotExistException(
             f"Booking {booking_id} on date {date} does not exist"
         )

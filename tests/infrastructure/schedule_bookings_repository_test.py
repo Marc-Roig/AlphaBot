@@ -136,3 +136,12 @@ async def test_remove_booking_from_schedule(
 
     assert updated_booking.status == "NONE"
     assert not is_scheduled
+
+async def test_remove_wrong_booking_by_id_from_schedule(
+    client: None, clean_db: None,
+) -> None:
+    # Try to remove an non existing booking, it should not return any exception
+    await bookings_scheduler_repository.remove_user_scheduled_booking_by_id_and_date(
+        "1111", datetime(2020, 1, 1, 10, 0), "marc12info@gmail.com"
+    )
+
