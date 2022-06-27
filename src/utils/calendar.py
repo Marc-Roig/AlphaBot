@@ -67,7 +67,7 @@ def create_calendar(year=None,month=None):
                 if year == now.year and month == now.month and int(day) == now.day:
                     text = "(" + text + ")"
 
-                if year == now.year and month == now.month and int(day) == next_bookable_day.day:
+                if year == next_bookable_day.year and month == next_bookable_day.month and int(day) == next_bookable_day.day:
                     text = text + "*"
 
                 row.append(
