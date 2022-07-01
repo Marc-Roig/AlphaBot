@@ -299,8 +299,11 @@ class BookingsRepository:
                 elif error_key == "ERROR_ANTELACION_CLIENTE":
                     raise CanNotBookInAdvanceException("You can not book in advance")
 
+            else:
+                raise Exception(f"Could not make booking. Unknown error:\n{response.json()}")
+
         # TODO: Manage errors
-        raise Exception("Could not make booking")
+        raise Exception(f"Could not make booking.\nResponse: {response.text}")
 
     async def cancel_booking(self, booking: Booking, mail: str, late: int = 0) -> Booking:
 
