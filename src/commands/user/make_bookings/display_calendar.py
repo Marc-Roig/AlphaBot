@@ -5,7 +5,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from src.utils.calendar import create_calendar
 from src.utils import decorators
-
+import datetime
 
 @decorators.user
 async def handler(update: Update, context: CallbackContext) -> None:
@@ -18,6 +18,8 @@ async def handler(update: Update, context: CallbackContext) -> None:
     if query:
         await query.answer()
     
+    now = datetime.datetime.now()
+
     await bot.send_message(update.effective_message.chat_id,
                      f"Select Day",
-                     reply_markup=create_calendar(2022, 6))
+                     reply_markup=create_calendar(now.year, now.month))
