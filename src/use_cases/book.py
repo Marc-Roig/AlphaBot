@@ -1,7 +1,7 @@
 import datetime
 from src.entities.booking import Booking
 from src.infrastructure import bookings_repository, bookings_scheduler_repository
-from src.infrastructure.bookings_repository import ExceededBookingLimitException, CanNotBookAtTheSameTimeException, NotAllowedForThisClassException, ExceededDailyBookingLimitException 
+from src.infrastructure.bookings_repository import ExceededBookingLimitException, CanNotBookAtTheSameTimeException, NotAllowedForThisClassException, ExceededDailyBookingLimitException, PendingPaymentException 
 
 class BookingDoesNotExistException(Exception):
     """
@@ -60,7 +60,8 @@ async def make_booking(booking: Booking, mail: str) -> Booking:
             booking = await bookings_repository.book(booking=booking, mail=mail)
         # If user is not allowed to book for that time, continue and discard this booking
         except (ExceededDailyBookingLimitException,
-                NotAllowedForThisClassException, 
+                NotAllowedForThisClassException,
+                PendingPaymentException,
                 ExceededBookingLimitException, 
                 CanNotBookAtTheSameTimeException):
             booking.status = "CANCELED"

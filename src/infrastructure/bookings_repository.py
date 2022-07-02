@@ -1,6 +1,6 @@
 from typing import Any, Optional
 from httpx import AsyncClient
-import dateparser
+import dateparser # type: ignore
 import datetime
 import asyncio
 import re
@@ -55,6 +55,12 @@ class CanNotBookInAdvanceException(Exception):
 
 
 class CanNotCancelBookingException(Exception):
+    def __init__(self, message, errors = []):            
+        super().__init__(message)
+        self.errors = errors
+
+
+class PendingPaymentException(Exception):
     def __init__(self, message, errors = []):            
         super().__init__(message)
         self.errors = errors
@@ -268,8 +274,6 @@ class BookingsRepository:
             state = response.json()["bookState"]
 
             if state == 0:
-                # TODO: Update cancel id and booking status
-                # booking.cancel_id = res_dict['id'] #TODO
                 booking.status = "QUEUED"
                 booking.cancel_id = response.json()["id"]
                 return booking
@@ -285,8 +289,14 @@ class BookingsRepository:
             elif state == -2:
                 raise NotAllowedForThisClassException("Not allowed for this class")
 
+            elif state == -5:
+                raise PendingPaymentException("Pending payment")
+
             elif state == -8:
                 raise ExceededDailyBookingLimitException("Exceeded daily booking limit")
+
+            elif state == -9:
+                raise NotAllowedForThisClassException("You have reached the limit of classes you can book")
 
             elif state == -12:
 
