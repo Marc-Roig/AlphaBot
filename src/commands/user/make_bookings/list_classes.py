@@ -55,10 +55,6 @@ async def _get_day_classes(date: datetime, email: str) -> ReplyKeyboardMarkup:
         ],
     )
 
-    text = "Here's a list of classes: \n\n"
-    for booking in bookings:
-        text += f" {booking.start_timestamp.strftime('%H:%M')}h - {booking.class_name} \n"
-
     # For each one create a button
     keyboard = []
 
@@ -67,7 +63,7 @@ async def _get_day_classes(date: datetime, email: str) -> ReplyKeyboardMarkup:
         # Filter bookings if class ended
         if booking.end_timestamp < datetime.now():
             continue
-        
+
         # Display time | date | class name
         button_text = f"{booking.start_timestamp.strftime('%H:%M')}h "
         # button_text += f"| {date.strftime('%y-%m-%d')} "

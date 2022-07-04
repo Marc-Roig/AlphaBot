@@ -38,7 +38,7 @@ class BookingsSchedulerMongoRepository(BookingsSchedulerPort):
 
     async def is_booking_scheduled(self, booking: Booking, mail: str) -> bool:
 
-        booking = await ScheduledBookings.find_one({"mail": mail, "booking.id": booking.id})
+        booking = await ScheduledBookings.find_one({"mail": mail, "booking.id": booking.id, "booking.start_timestamp": booking.start_timestamp})
         if booking:
             return True
         
