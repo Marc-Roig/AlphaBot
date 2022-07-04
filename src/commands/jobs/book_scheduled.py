@@ -31,8 +31,15 @@ async def _make_user_bookings(context: CallbackContext, user_email: str) -> None
                 f"🤖❌ Booking discarded *{booking.class_name} - {booking.start_timestamp.strftime('%A %d. %H:%M')}*. Something went wrong",
                 parse_mode="Markdown"
             )
-            
-        if booking.is_booked():
+        
+        if booking.is_queued():
+            await context.bot.send_message(
+                telegram_user.id, 
+                f"🤖✅ You are on the waitlist for *{booking.class_name} - {booking.start_timestamp.strftime('%A %d. %H:%M')}*",
+                parse_mode="Markdown"
+            )
+
+        elif booking.is_booked():
             await context.bot.send_message(
                 telegram_user.id, 
                 f"🤖✅ Booked *{booking.class_name} - {booking.start_timestamp.strftime('%A %d. %H:%M')}h*",

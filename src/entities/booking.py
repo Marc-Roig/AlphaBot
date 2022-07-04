@@ -20,6 +20,9 @@ class Booking(BaseModel):
     def is_booked(self) -> bool:
         return self.status in ["QUEUED", "BOOKED"]
     
+    def is_queued(self) -> bool:
+        return self.status == "QUEUED"
+
     def is_scheduled(self) -> bool:
         return self.status == "SCHEDULED"
     
