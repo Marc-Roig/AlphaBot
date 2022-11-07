@@ -31,27 +31,3 @@ pymongo-migrate migrate -u 'mongodb://mongo:PASSWORD@containers-us-west-74.railw
 pip install -r requirements.txt
 python alphabot.py
 ```
-
-# 🛣️ Road map
-
-## 🔖 Future releases
-- [ ] Add logger (loguru) ~
-- [ ] Reminder of today and 4 days scheduling bookings every morning (4 days) with a button to disable this message
-
-# 🧪 Testing steps
-[ ] Book a class
-[ ] Cancel a class
-[ ] Schedule a booking when is more than 4 days ahead
-[ ] Schedule a booking when class is full
-[ ] Discard a booking when 
-    [ ] Exceeded Daily Booking Limit
-    [ ] Not Allowed For that Class
-    [ ] Exceeded Booking Limit
-    [ ] Can not Book at the same time
-[ ] Aimharder login
-[ ] Notifications
-    [ ] Scheduled booking succeeded
-    [ ] Scheduled booking failed
-    [ ] Login about to expire
-[ ] Database migrations
-[ ] Invite
